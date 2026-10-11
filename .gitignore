@@ -1,0 +1,30 @@
+# Backend - Maven
+backend/target/
+backend/*.log
+
+# Frontend - Node.js
+frontend/node_modules/
+frontend/.next/
+frontend/dist/
+frontend/out/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/application-local.properties
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs and compiled files
+*.log
+*.class
+
+# Database backups
+*.sql
+*.dump
+*.bak
+# Keep database credentials private
+backend/src/main/resources/application.properties

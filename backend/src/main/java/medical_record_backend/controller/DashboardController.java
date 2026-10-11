@@ -1,0 +1,44 @@
+package medical_record_backend.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import medical_record_backend.service.DashboardService;
+import medical_record_backend.service.DashboardService.DashboardData;
+
+@RestController
+@RequestMapping("/api/dashboard")
+@CrossOrigin(origins = "http://localhost:5173")
+public class DashboardController {
+
+    private final DashboardService dashboardService;
+
+    public DashboardController(
+            DashboardService dashboardService
+    ) {
+        this.dashboardService = dashboardService;
+    }
+
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<?> getDashboardData(
+            @PathVariable Long patientId
+    ) {
+        try {
+
+            DashboardData dashboardData =
+                    dashboardService.getDashboardData(patientId);
+
+            return ResponseEntity.ok(dashboardData);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+}
