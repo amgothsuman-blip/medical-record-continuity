@@ -18,7 +18,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/patients/login",
+        "https://medical-record-continuity.onrender.com/api/patients/login",
         {
           method: "POST",
           headers: {
@@ -28,27 +28,19 @@ function Login() {
             email,
             password,
           }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          typeof data === "string"
-            ? data
-            : "Login failed."
-        );
+        throw new Error(typeof data === "string" ? data : "Login failed.");
       }
 
       // Store the logged-in patient for the current browser session.
-      sessionStorage.setItem(
-        "patient",
-        JSON.stringify(data)
-      );
+      sessionStorage.setItem("patient", JSON.stringify(data));
 
       navigate("/dashboard");
-
     } catch (error) {
       setError(error.message);
     } finally {
@@ -59,29 +51,19 @@ function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-
         <div className="auth-logo">
           Medical<span>Record</span>
         </div>
 
         <h1>Welcome Back</h1>
 
-        <p className="auth-subtitle">
-          Login to access your medical records.
-        </p>
+        <p className="auth-subtitle">Login to access your medical records.</p>
 
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="auth-error">{error}</div>}
 
         <form onSubmit={handleLogin}>
-
           <div className="form-group">
-            <label htmlFor="email">
-              Email Address
-            </label>
+            <label htmlFor="email">Email Address</label>
 
             <input
               type="email"
@@ -94,9 +76,7 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">
-              Password
-            </label>
+            <label htmlFor="password">Password</label>
 
             <input
               type="password"
@@ -109,39 +89,26 @@ function Login() {
           </div>
 
           <div className="form-options">
-
             <label className="remember-me">
               <input type="checkbox" />
               Remember me
             </label>
 
-            <a href="#forgot-password">
-              Forgot password?
-            </a>
-
+            <a href="#forgot-password">Forgot password?</a>
           </div>
 
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={loading}
-          >
+          <button type="submit" className="auth-button" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
         <p className="auth-footer">
-          Don't have an account?{" "}
-          <Link to="/register">
-            Create an account
-          </Link>
+          Don't have an account? <Link to="/register">Create an account</Link>
         </p>
 
         <Link to="/" className="back-home">
           ← Back to Home
         </Link>
-
       </div>
     </div>
   );

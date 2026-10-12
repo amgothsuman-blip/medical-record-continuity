@@ -20,9 +20,7 @@ function LabReports() {
   });
 
   const storedPatient = sessionStorage.getItem("patient");
-  const patient = storedPatient
-    ? JSON.parse(storedPatient)
-    : null;
+  const patient = storedPatient ? JSON.parse(storedPatient) : null;
 
   // Load laboratory reports
   const loadReports = () => {
@@ -36,7 +34,7 @@ function LabReports() {
     setError("");
 
     fetch(
-      `http://localhost:8080/api/lab-reports/patient/${patient.id}`
+      `https://medical-record-continuity.onrender.com/api/lab-reports/patient/${patient.id}`,
     )
       .then(async (response) => {
         const data = await response.json();
@@ -45,7 +43,7 @@ function LabReports() {
           throw new Error(
             typeof data === "string"
               ? data
-              : "Unable to load laboratory reports."
+              : "Unable to load laboratory reports.",
           );
         }
 
@@ -91,23 +89,21 @@ function LabReports() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/lab-reports/patient/${patient.id}`,
+        `https://medical-record-continuity.onrender.com/api/lab-reports/patient/${patient.id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Unable to save laboratory report."
+          typeof data === "string" ? data : "Unable to save laboratory report.",
         );
       }
 
@@ -140,7 +136,7 @@ function LabReports() {
     }
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this laboratory report?"
+      "Are you sure you want to delete this laboratory report?",
     );
 
     if (!confirmed) {
@@ -153,26 +149,22 @@ function LabReports() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/lab-reports/patient/${patient.id}/${reportId}`,
+        `https://medical-record-continuity.onrender.com/api/lab-reports/patient/${patient.id}/${reportId}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.text();
 
       if (!response.ok) {
-        throw new Error(
-          data || "Unable to delete laboratory report."
-        );
+        throw new Error(data || "Unable to delete laboratory report.");
       }
 
       setSuccess("Laboratory report deleted successfully.");
 
       setReports((previousReports) =>
-        previousReports.filter(
-          (report) => report.id !== reportId
-        )
+        previousReports.filter((report) => report.id !== reportId),
       );
     } catch (error) {
       setError(error.message);
@@ -183,15 +175,11 @@ function LabReports() {
 
   return (
     <div className="records-page">
-
       {/* Header */}
 
       <div className="records-header">
-
         <div>
-          <p className="dashboard-welcome">
-            PATIENT PORTAL
-          </p>
+          <p className="dashboard-welcome">PATIENT PORTAL</p>
 
           <h1>Lab Reports</h1>
 
@@ -209,32 +197,23 @@ function LabReports() {
             setError("");
           }}
         >
-          {showForm
-            ? "Cancel"
-            : "+ Add Lab Report"}
+          {showForm ? "Cancel" : "+ Add Lab Report"}
         </button>
-
       </div>
 
       {/* Add Lab Report Form */}
 
       {showForm && (
         <div className="records-card add-record-card">
-
           <div className="records-card-header">
-
             <div>
               <h2>Add Laboratory Report</h2>
 
-              <p>
-                Enter the laboratory report details below.
-              </p>
+              <p>Enter the laboratory report details below.</p>
             </div>
-
           </div>
 
           <form onSubmit={handleSubmit}>
-
             <div className="form-group">
               <label>Test Name</label>
 
@@ -313,166 +292,110 @@ function LabReports() {
               className="save-record-button"
               disabled={saving}
             >
-              {saving
-                ? "Saving..."
-                : "Save Lab Report"}
+              {saving ? "Saving..." : "Save Lab Report"}
             </button>
-
           </form>
-
         </div>
       )}
 
       {/* Success Message */}
 
-      {success && (
-        <div className="success-message">
-          {success}
-        </div>
-      )}
+      {success && <div className="success-message">{success}</div>}
 
       {/* Error Message */}
 
-      {error && !loading && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && !loading && <div className="error-message">{error}</div>}
 
       {/* Laboratory Reports */}
 
       <div className="records-card">
-
         <div className="records-card-header">
-
           <div>
             <h2>Laboratory Reports</h2>
 
             <p>
-              Laboratory reports retrieved from your healthcare providers
-              will appear here.
+              Laboratory reports retrieved from your healthcare providers will
+              appear here.
             </p>
           </div>
-
         </div>
 
         {loading && (
           <div className="records-empty-state">
-            <h3>
-              Loading laboratory reports...
-            </h3>
+            <h3>Loading laboratory reports...</h3>
           </div>
         )}
 
-        {!loading &&
-          !error &&
-          reports.length === 0 && (
-            <div className="records-empty-state">
+        {!loading && !error && reports.length === 0 && (
+          <div className="records-empty-state">
+            <div className="records-empty-icon">⌁</div>
 
-              <div className="records-empty-icon">
-                ⌁
-              </div>
+            <h3>No laboratory reports available</h3>
 
-              <h3>
-                No laboratory reports available
-              </h3>
+            <p>
+              There are currently no laboratory reports available for this
+              account.
+            </p>
+          </div>
+        )}
 
-              <p>
-                There are currently no laboratory reports available
-                for this account.
-              </p>
+        {!loading && reports.length > 0 && (
+          <div className="medical-record-list">
+            {reports.map((report) => (
+              <div className="medical-record-item" key={report.id}>
+                <div>
+                  <small>Test</small>
 
-            </div>
-          )}
-
-        {!loading &&
-          reports.length > 0 && (
-            <div className="medical-record-list">
-
-              {reports.map((report) => (
-                <div
-                  className="medical-record-item"
-                  key={report.id}
-                >
-
-                  <div>
-                    <small>Test</small>
-
-                    <strong>
-                      {report.testName}
-                    </strong>
-                  </div>
-
-                  <div>
-                    <small>Report Date</small>
-
-                    <p>
-                      {report.reportDate}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Result</small>
-
-                    <p>
-                      {report.result || "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Reference Range</small>
-
-                    <p>
-                      {report.referenceRange ||
-                        "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Laboratory</small>
-
-                    <p>
-                      {report.laboratoryName ||
-                        "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Remarks</small>
-
-                    <p>
-                      {report.remarks ||
-                        "Not available"}
-                    </p>
-                  </div>
-
-                  {/* Delete */}
-
-                  <div>
-                    <button
-                      type="button"
-                      className="delete-record-button"
-                      onClick={() =>
-                        handleDelete(report.id)
-                      }
-                      disabled={
-                        deletingId === report.id
-                      }
-                    >
-                      {deletingId === report.id
-                        ? "Deleting..."
-                        : "Delete"}
-                    </button>
-                  </div>
-
+                  <strong>{report.testName}</strong>
                 </div>
-              ))}
 
-            </div>
-          )}
+                <div>
+                  <small>Report Date</small>
 
+                  <p>{report.reportDate}</p>
+                </div>
+
+                <div>
+                  <small>Result</small>
+
+                  <p>{report.result || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Reference Range</small>
+
+                  <p>{report.referenceRange || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Laboratory</small>
+
+                  <p>{report.laboratoryName || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Remarks</small>
+
+                  <p>{report.remarks || "Not available"}</p>
+                </div>
+
+                {/* Delete */}
+
+                <div>
+                  <button
+                    type="button"
+                    className="delete-record-button"
+                    onClick={() => handleDelete(report.id)}
+                    disabled={deletingId === report.id}
+                  >
+                    {deletingId === report.id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
     </div>
   );
 }

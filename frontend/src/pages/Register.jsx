@@ -39,7 +39,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/patients/register",
+        "https://medical-record-continuity.onrender.com/api/patients/register",
         {
           method: "POST",
           headers: {
@@ -52,16 +52,14 @@ function Register() {
             dateOfBirth: formData.dateOfBirth,
             password: formData.password,
           }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Registration failed."
+          typeof data === "string" ? data : "Registration failed.",
         );
       }
 
@@ -76,7 +74,6 @@ function Register() {
   return (
     <div className="auth-page">
       <div className="auth-card register-card">
-
         <div className="auth-logo">
           Medical<span>Record</span>
         </div>
@@ -87,18 +84,11 @@ function Register() {
           Create your account to manage your medical records.
         </p>
 
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="auth-error">{error}</div>}
 
         <form onSubmit={handleRegister}>
-
           <div className="form-group">
-            <label htmlFor="fullName">
-              Full Name
-            </label>
+            <label htmlFor="fullName">Full Name</label>
 
             <input
               type="text"
@@ -111,9 +101,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">
-              Email Address
-            </label>
+            <label htmlFor="email">Email Address</label>
 
             <input
               type="email"
@@ -126,9 +114,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">
-              Phone Number
-            </label>
+            <label htmlFor="phone">Phone Number</label>
 
             <input
               type="tel"
@@ -141,9 +127,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dateOfBirth">
-              Date of Birth
-            </label>
+            <label htmlFor="dateOfBirth">Date of Birth</label>
 
             <input
               type="date"
@@ -155,9 +139,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">
-              Password
-            </label>
+            <label htmlFor="password">Password</label>
 
             <input
               type="password"
@@ -170,9 +152,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">
-              Confirm Password
-            </label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
 
             <input
               type="password"
@@ -184,27 +164,18 @@ function Register() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={loading}
-          >
+          <button type="submit" className="auth-button" disabled={loading}>
             {loading ? "Creating Account..." : "Create Account"}
           </button>
-
         </form>
 
         <p className="auth-footer">
-          Already have an account?{" "}
-          <Link to="/login">
-            Login here
-          </Link>
+          Already have an account? <Link to="/login">Login here</Link>
         </p>
 
         <Link to="/" className="back-home">
           ← Back to Home
         </Link>
-
       </div>
     </div>
   );

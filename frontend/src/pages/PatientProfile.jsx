@@ -104,7 +104,7 @@ function PatientProfile() {
       setSuccess("");
 
       const response = await fetch(
-        `http://localhost:8080/api/patients/${patient.id}`,
+        `https://medical-record-continuity.onrender.com/api/patients/${patient.id}`,
         {
           method: "PUT",
 
@@ -121,16 +121,14 @@ function PatientProfile() {
             bloodGroup: formData.bloodGroup,
             address: formData.address,
           }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Unable to update profile."
+          typeof data === "string" ? data : "Unable to update profile.",
         );
       }
 
@@ -146,17 +144,12 @@ function PatientProfile() {
         address: data.address || "",
       });
 
-      sessionStorage.setItem(
-        "patient",
-        JSON.stringify(data)
-      );
+      sessionStorage.setItem("patient", JSON.stringify(data));
 
       setSuccess("Profile updated successfully.");
       setEditMode(false);
-
     } catch (error) {
       setError(error.message);
-
     } finally {
       setSaving(false);
     }
@@ -165,14 +158,13 @@ function PatientProfile() {
   // ==================== DELETE ACCOUNT ====================
 
   const handleDeleteAccount = async () => {
-
     if (!patient) {
       setError("Patient information not available.");
       return;
     }
 
     const firstConfirmation = window.confirm(
-      "WARNING!\n\nAre you sure you want to permanently delete your account?"
+      "WARNING!\n\nAre you sure you want to permanently delete your account?",
     );
 
     if (!firstConfirmation) {
@@ -180,7 +172,7 @@ function PatientProfile() {
     }
 
     const secondConfirmation = window.confirm(
-      "This will permanently delete your profile and all associated medical records, lab reports, prescriptions, and appointments.\n\nThis action cannot be undone.\n\nContinue?"
+      "This will permanently delete your profile and all associated medical records, lab reports, prescriptions, and appointments.\n\nThis action cannot be undone.\n\nContinue?",
     );
 
     if (!secondConfirmation) {
@@ -188,24 +180,21 @@ function PatientProfile() {
     }
 
     try {
-
       setDeleting(true);
       setError("");
       setSuccess("");
 
       const response = await fetch(
-        `http://localhost:8080/api/patients/${patient.id}`,
+        `https://medical-record-continuity.onrender.com/api/patients/${patient.id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.text();
 
       if (!response.ok) {
-        throw new Error(
-          data || "Unable to delete account."
-        );
+        throw new Error(data || "Unable to delete account.");
       }
 
       // Clear patient session
@@ -213,9 +202,7 @@ function PatientProfile() {
 
       // Redirect to login page
       navigate("/login");
-
     } catch (error) {
-
       setError(error.message);
 
       setDeleting(false);
@@ -227,35 +214,19 @@ function PatientProfile() {
   if (loading) {
     return (
       <div className="profile-page">
-
         <div className="profile-header">
-
           <div>
+            <p className="dashboard-welcome">PATIENT PORTAL</p>
 
-            <p className="dashboard-welcome">
-              PATIENT PORTAL
-            </p>
-
-            <h1>
-              Patient Profile
-            </h1>
-
+            <h1>Patient Profile</h1>
           </div>
-
         </div>
 
         <div className="profile-card">
-
           <div className="profile-empty-message">
-
-            <strong>
-              Loading patient information...
-            </strong>
-
+            <strong>Loading patient information...</strong>
           </div>
-
         </div>
-
       </div>
     );
   }
@@ -265,68 +236,41 @@ function PatientProfile() {
   if (!patient) {
     return (
       <div className="profile-page">
-
         <div className="profile-header">
-
           <div>
+            <p className="dashboard-welcome">PATIENT PORTAL</p>
 
-            <p className="dashboard-welcome">
-              PATIENT PORTAL
-            </p>
-
-            <h1>
-              Patient Profile
-            </h1>
-
+            <h1>Patient Profile</h1>
           </div>
-
         </div>
 
         <div className="profile-card">
-
           <div className="profile-empty-message">
+            <strong>No patient information available</strong>
 
-            <strong>
-              No patient information available
-            </strong>
-
-            <p>
-              Please log in to view your patient information.
-            </p>
-
+            <p>Please log in to view your patient information.</p>
           </div>
-
         </div>
-
       </div>
     );
   }
 
   return (
     <div className="profile-page">
-
       {/* ==================== HEADER ==================== */}
 
       <div className="profile-header">
-
         <div>
+          <p className="dashboard-welcome">PATIENT PORTAL</p>
 
-          <p className="dashboard-welcome">
-            PATIENT PORTAL
-          </p>
-
-          <h1>
-            Patient Profile
-          </h1>
+          <h1>Patient Profile</h1>
 
           <p className="profile-description">
             Your personal information from your medical record account.
           </p>
-
         </div>
 
         {!editMode ? (
-
           <button
             className="add-record-button"
             onClick={handleEdit}
@@ -334,9 +278,7 @@ function PatientProfile() {
           >
             Edit Profile
           </button>
-
         ) : (
-
           <button
             className="secondary-button"
             onClick={handleCancel}
@@ -344,59 +286,34 @@ function PatientProfile() {
           >
             Cancel
           </button>
-
         )}
-
       </div>
 
       {/* ==================== SUCCESS ==================== */}
 
-      {success && (
-        <div className="success-message">
-          {success}
-        </div>
-      )}
+      {success && <div className="success-message">{success}</div>}
 
       {/* ==================== ERROR ==================== */}
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && <div className="error-message">{error}</div>}
 
       {/* ==================== PROFILE CARD ==================== */}
 
       <div className="profile-card">
-
         <div className="profile-card-header">
+          <h2>Personal Information</h2>
 
-          <h2>
-            Personal Information
-          </h2>
-
-          <p>
-            Information associated with your medical record account.
-          </p>
-
+          <p>Information associated with your medical record account.</p>
         </div>
 
         {/* ==================== FORM ==================== */}
 
-        <form
-          className="profile-form"
-          onSubmit={handleSubmit}
-        >
-
+        <form className="profile-form" onSubmit={handleSubmit}>
           {/* ROW 1 */}
 
           <div className="form-row">
-
             <div className="form-group">
-
-              <label htmlFor="fullName">
-                Full Name
-              </label>
+              <label htmlFor="fullName">Full Name</label>
 
               <input
                 type="text"
@@ -407,14 +324,10 @@ function PatientProfile() {
                 disabled={!editMode || saving}
                 required
               />
-
             </div>
 
             <div className="form-group">
-
-              <label htmlFor="dateOfBirth">
-                Date of Birth
-              </label>
+              <label htmlFor="dateOfBirth">Date of Birth</label>
 
               <input
                 type="date"
@@ -425,20 +338,14 @@ function PatientProfile() {
                 disabled={!editMode || saving}
                 required
               />
-
             </div>
-
           </div>
 
           {/* ROW 2 */}
 
           <div className="form-row">
-
             <div className="form-group">
-
-              <label htmlFor="email">
-                Email Address
-              </label>
+              <label htmlFor="email">Email Address</label>
 
               <input
                 type="email"
@@ -449,14 +356,10 @@ function PatientProfile() {
                 disabled={!editMode || saving}
                 required
               />
-
             </div>
 
             <div className="form-group">
-
-              <label htmlFor="phone">
-                Phone Number
-              </label>
+              <label htmlFor="phone">Phone Number</label>
 
               <input
                 type="tel"
@@ -467,23 +370,16 @@ function PatientProfile() {
                 disabled={!editMode || saving}
                 required
               />
-
             </div>
-
           </div>
 
           {/* ROW 3 */}
 
           <div className="form-row">
-
             <div className="form-group">
-
-              <label htmlFor="gender">
-                Gender
-              </label>
+              <label htmlFor="gender">Gender</label>
 
               {editMode ? (
-
                 <select
                   id="gender"
                   name="gender"
@@ -491,49 +387,28 @@ function PatientProfile() {
                   onChange={handleChange}
                   disabled={saving}
                 >
+                  <option value="">Select Gender</option>
 
-                  <option value="">
-                    Select Gender
-                  </option>
+                  <option value="Male">Male</option>
 
-                  <option value="Male">
-                    Male
-                  </option>
+                  <option value="Female">Female</option>
 
-                  <option value="Female">
-                    Female
-                  </option>
-
-                  <option value="Other">
-                    Other
-                  </option>
-
+                  <option value="Other">Other</option>
                 </select>
-
               ) : (
-
                 <input
                   type="text"
                   id="gender"
-                  value={
-                    formData.gender ||
-                    "Not available"
-                  }
+                  value={formData.gender || "Not available"}
                   disabled
                 />
-
               )}
-
             </div>
 
             <div className="form-group">
-
-              <label htmlFor="bloodGroup">
-                Blood Group
-              </label>
+              <label htmlFor="bloodGroup">Blood Group</label>
 
               {editMode ? (
-
                 <select
                   id="bloodGroup"
                   name="bloodGroup"
@@ -541,70 +416,39 @@ function PatientProfile() {
                   onChange={handleChange}
                   disabled={saving}
                 >
+                  <option value="">Select Blood Group</option>
 
-                  <option value="">
-                    Select Blood Group
-                  </option>
+                  <option value="A+">A+</option>
 
-                  <option value="A+">
-                    A+
-                  </option>
+                  <option value="A-">A-</option>
 
-                  <option value="A-">
-                    A-
-                  </option>
+                  <option value="B+">B+</option>
 
-                  <option value="B+">
-                    B+
-                  </option>
+                  <option value="B-">B-</option>
 
-                  <option value="B-">
-                    B-
-                  </option>
+                  <option value="AB+">AB+</option>
 
-                  <option value="AB+">
-                    AB+
-                  </option>
+                  <option value="AB-">AB-</option>
 
-                  <option value="AB-">
-                    AB-
-                  </option>
+                  <option value="O+">O+</option>
 
-                  <option value="O+">
-                    O+
-                  </option>
-
-                  <option value="O-">
-                    O-
-                  </option>
-
+                  <option value="O-">O-</option>
                 </select>
-
               ) : (
-
                 <input
                   type="text"
                   id="bloodGroup"
-                  value={
-                    formData.bloodGroup ||
-                    "Not available"
-                  }
+                  value={formData.bloodGroup || "Not available"}
                   disabled
                 />
-
               )}
-
             </div>
-
           </div>
 
           {/* ADDRESS */}
 
           <div className="form-group">
-
-            <label htmlFor="address">
-              Address
-            </label>
+            <label htmlFor="address">Address</label>
 
             <textarea
               id="address"
@@ -613,31 +457,20 @@ function PatientProfile() {
               value={formData.address}
               onChange={handleChange}
               disabled={!editMode || saving}
-              placeholder={
-                editMode
-                  ? "Enter your address"
-                  : ""
-              }
+              placeholder={editMode ? "Enter your address" : ""}
             />
-
           </div>
 
           {/* SAVE BUTTON */}
 
           {editMode && (
-
             <div className="profile-actions">
-
               <button
                 type="submit"
                 className="save-record-button"
                 disabled={saving}
               >
-
-                {saving
-                  ? "Saving..."
-                  : "Save Changes"}
-
+                {saving ? "Saving..." : "Save Changes"}
               </button>
 
               <button
@@ -648,31 +481,21 @@ function PatientProfile() {
               >
                 Cancel
               </button>
-
             </div>
-
           )}
-
         </form>
-
       </div>
-
 
       {/* ==================== DANGER ZONE ==================== */}
 
       <div className="profile-card danger-zone">
-
         <div className="profile-card-header">
-
-          <h2>
-            Delete Account
-          </h2>
+          <h2>Delete Account</h2>
 
           <p>
-            Permanently delete your account and all associated
-            medical information.
+            Permanently delete your account and all associated medical
+            information.
           </p>
-
         </div>
 
         <button
@@ -681,15 +504,9 @@ function PatientProfile() {
           onClick={handleDeleteAccount}
           disabled={deleting || saving}
         >
-
-          {deleting
-            ? "Deleting Account..."
-            : "Delete My Account"}
-
+          {deleting ? "Deleting Account..." : "Delete My Account"}
         </button>
-
       </div>
-
     </div>
   );
 }

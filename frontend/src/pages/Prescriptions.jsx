@@ -34,16 +34,14 @@ function Prescriptions() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/prescriptions/patient/${patient.id}`
+        `https://medical-record-continuity.onrender.com/api/prescriptions/patient/${patient.id}`,
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Unable to load prescriptions."
+          typeof data === "string" ? data : "Unable to load prescriptions.",
         );
       }
 
@@ -82,23 +80,21 @@ function Prescriptions() {
       setSuccess("");
 
       const response = await fetch(
-        `http://localhost:8080/api/prescriptions/patient/${patient.id}`,
+        `https://medical-record-continuity.onrender.com/api/prescriptions/patient/${patient.id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Unable to save prescription."
+          typeof data === "string" ? data : "Unable to save prescription.",
         );
       }
 
@@ -132,7 +128,7 @@ function Prescriptions() {
     const patient = JSON.parse(storedPatient);
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this prescription?"
+      "Are you sure you want to delete this prescription?",
     );
 
     if (!confirmed) {
@@ -144,24 +140,20 @@ function Prescriptions() {
       setSuccess("");
 
       const response = await fetch(
-        `http://localhost:8080/api/prescriptions/patient/${patient.id}/${prescriptionId}`,
+        `https://medical-record-continuity.onrender.com/api/prescriptions/patient/${patient.id}/${prescriptionId}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.text();
 
       if (!response.ok) {
-        throw new Error(
-          data || "Unable to delete prescription."
-        );
+        throw new Error(data || "Unable to delete prescription.");
       }
 
       setPrescriptions((previous) =>
-        previous.filter(
-          (prescription) => prescription.id !== prescriptionId
-        )
+        previous.filter((prescription) => prescription.id !== prescriptionId),
       );
 
       setSuccess("Prescription deleted successfully.");
@@ -172,19 +164,14 @@ function Prescriptions() {
 
   return (
     <div className="records-page">
-
       <div className="records-header">
-
         <div>
-          <p className="dashboard-welcome">
-            PATIENT PORTAL
-          </p>
+          <p className="dashboard-welcome">PATIENT PORTAL</p>
 
           <h1>Prescriptions</h1>
 
           <p className="records-description">
-            View and manage prescriptions associated with your
-            medical records.
+            View and manage prescriptions associated with your medical records.
           </p>
         </div>
 
@@ -198,32 +185,19 @@ function Prescriptions() {
         >
           + Add Prescription
         </button>
-
       </div>
 
-      {success && (
-        <div className="success-message">
-          {success}
-        </div>
-      )}
+      {success && <div className="success-message">{success}</div>}
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && <div className="error-message">{error}</div>}
 
       {showForm && (
         <div className="records-card">
-
           <div className="records-card-header">
-
             <div>
               <h2>Add Prescription</h2>
 
-              <p>
-                Enter the prescription details below.
-              </p>
+              <p>Enter the prescription details below.</p>
             </div>
 
             <button
@@ -235,14 +209,9 @@ function Prescriptions() {
             >
               Cancel
             </button>
-
           </div>
 
-          <form
-            className="record-form"
-            onSubmit={handleSubmit}
-          >
-
+          <form className="record-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Medicine Name</label>
 
@@ -316,31 +285,23 @@ function Prescriptions() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="save-record-button"
-            >
+            <button type="submit" className="save-record-button">
               Save Prescription
             </button>
-
           </form>
-
         </div>
       )}
 
       <div className="records-card">
-
         <div className="records-card-header">
-
           <div>
             <h2>Prescriptions</h2>
 
             <p>
-              Prescriptions retrieved from your healthcare
-              providers will appear here.
+              Prescriptions retrieved from your healthcare providers will appear
+              here.
             </p>
           </div>
-
         </div>
 
         {loading && (
@@ -349,104 +310,71 @@ function Prescriptions() {
           </div>
         )}
 
-        {!loading &&
-          !error &&
-          prescriptions.length === 0 && (
-            <div className="records-empty-state">
+        {!loading && !error && prescriptions.length === 0 && (
+          <div className="records-empty-state">
+            <div className="records-empty-icon">+</div>
 
-              <div className="records-empty-icon">
-                +
-              </div>
+            <h3>No prescriptions available</h3>
 
-              <h3>No prescriptions available</h3>
+            <p>
+              There are currently no prescriptions available for this account.
+            </p>
+          </div>
+        )}
 
-              <p>
-                There are currently no prescriptions available
-                for this account.
-              </p>
+        {!loading && prescriptions.length > 0 && (
+          <div className="medical-record-list">
+            {prescriptions.map((prescription) => (
+              <div className="medical-record-item" key={prescription.id}>
+                <div>
+                  <small>Medicine</small>
 
-            </div>
-          )}
-
-        {!loading &&
-          prescriptions.length > 0 && (
-            <div className="medical-record-list">
-
-              {prescriptions.map((prescription) => (
-
-                <div
-                  className="medical-record-item"
-                  key={prescription.id}
-                >
-
-                  <div>
-                    <small>Medicine</small>
-
-                    <strong>
-                      {prescription.medicineName}
-                    </strong>
-                  </div>
-
-                  <div>
-                    <small>Dosage</small>
-
-                    <p>
-                      {prescription.dosage || "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Frequency</small>
-
-                    <p>
-                      {prescription.frequency || "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Prescribed Date</small>
-
-                    <p>
-                      {prescription.prescribedDate}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Doctor</small>
-
-                    <p>
-                      {prescription.doctorName || "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>Instructions</small>
-
-                    <p>
-                      {prescription.instructions || "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <button
-                      className="delete-record-button"
-                      onClick={() =>
-                        handleDelete(prescription.id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  </div>
-
+                  <strong>{prescription.medicineName}</strong>
                 </div>
 
-              ))}
+                <div>
+                  <small>Dosage</small>
 
-            </div>
-          )}
+                  <p>{prescription.dosage || "Not available"}</p>
+                </div>
 
+                <div>
+                  <small>Frequency</small>
+
+                  <p>{prescription.frequency || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Prescribed Date</small>
+
+                  <p>{prescription.prescribedDate}</p>
+                </div>
+
+                <div>
+                  <small>Doctor</small>
+
+                  <p>{prescription.doctorName || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Instructions</small>
+
+                  <p>{prescription.instructions || "Not available"}</p>
+                </div>
+
+                <div>
+                  <button
+                    className="delete-record-button"
+                    onClick={() => handleDelete(prescription.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
     </div>
   );
 }

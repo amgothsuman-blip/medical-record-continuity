@@ -33,16 +33,14 @@ function MedicalRecords() {
     setError("");
 
     fetch(
-      `http://localhost:8080/api/medical-records/patient/${patient.id}`
+      `https://medical-record-continuity.onrender.com/api/medical-records/patient/${patient.id}`,
     )
       .then(async (response) => {
         const data = await response.json();
 
         if (!response.ok) {
           throw new Error(
-            typeof data === "string"
-              ? data
-              : "Unable to load medical records."
+            typeof data === "string" ? data : "Unable to load medical records.",
           );
         }
 
@@ -88,23 +86,21 @@ function MedicalRecords() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/medical-records/patient/${patient.id}`,
+        `https://medical-record-continuity.onrender.com/api/medical-records/patient/${patient.id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          typeof data === "string"
-            ? data
-            : "Unable to save medical record."
+          typeof data === "string" ? data : "Unable to save medical record.",
         );
       }
 
@@ -136,7 +132,7 @@ function MedicalRecords() {
     }
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this medical record?"
+      "Are you sure you want to delete this medical record?",
     );
 
     if (!confirmed) {
@@ -149,27 +145,23 @@ function MedicalRecords() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/medical-records/patient/${patient.id}/${recordId}`,
+        `https://medical-record-continuity.onrender.com/api/medical-records/patient/${patient.id}/${recordId}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.text();
 
       if (!response.ok) {
-        throw new Error(
-          data || "Unable to delete medical record."
-        );
+        throw new Error(data || "Unable to delete medical record.");
       }
 
       setSuccess("Medical record deleted successfully.");
 
       // Remove deleted record immediately from the screen
       setRecords((previousRecords) =>
-        previousRecords.filter(
-          (record) => record.id !== recordId
-        )
+        previousRecords.filter((record) => record.id !== recordId),
       );
     } catch (error) {
       setError(error.message);
@@ -180,15 +172,11 @@ function MedicalRecords() {
 
   return (
     <div className="records-page">
-
       {/* Header */}
 
       <div className="records-header">
-
         <div>
-          <p className="dashboard-welcome">
-            PATIENT PORTAL
-          </p>
+          <p className="dashboard-welcome">PATIENT PORTAL</p>
 
           <h1>Medical Records</h1>
 
@@ -206,32 +194,23 @@ function MedicalRecords() {
             setError("");
           }}
         >
-          {showForm
-            ? "Cancel"
-            : "+ Add Medical Record"}
+          {showForm ? "Cancel" : "+ Add Medical Record"}
         </button>
-
       </div>
 
       {/* Add Medical Record Form */}
 
       {showForm && (
         <div className="records-card add-record-card">
-
           <div className="records-card-header">
-
             <div>
               <h2>Add Medical Record</h2>
 
-              <p>
-                Enter the medical record details below.
-              </p>
+              <p>Enter the medical record details below.</p>
             </div>
-
           </div>
 
           <form onSubmit={handleSubmit}>
-
             <div className="form-group">
               <label>Record Date</label>
 
@@ -298,158 +277,97 @@ function MedicalRecords() {
               className="save-record-button"
               disabled={saving}
             >
-              {saving
-                ? "Saving..."
-                : "Save Medical Record"}
+              {saving ? "Saving..." : "Save Medical Record"}
             </button>
-
           </form>
-
         </div>
       )}
 
       {/* Success Message */}
 
-      {success && (
-        <div className="success-message">
-          {success}
-        </div>
-      )}
+      {success && <div className="success-message">{success}</div>}
 
       {/* Error Message */}
 
-      {error && !loading && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && !loading && <div className="error-message">{error}</div>}
 
       {/* Medical Records */}
 
       <div className="records-card">
-
         <div className="records-card-header">
-
           <div>
             <h2>Medical History</h2>
 
             <p>
-              Medical records retrieved from your
-              healthcare providers will appear here.
+              Medical records retrieved from your healthcare providers will
+              appear here.
             </p>
           </div>
-
         </div>
 
         {loading && (
           <div className="records-empty-state">
-            <h3>
-              Loading medical records...
-            </h3>
+            <h3>Loading medical records...</h3>
           </div>
         )}
 
-        {!loading &&
-          !error &&
-          records.length === 0 && (
-            <div className="records-empty-state">
+        {!loading && !error && records.length === 0 && (
+          <div className="records-empty-state">
+            <div className="records-empty-icon">+</div>
 
-              <div className="records-empty-icon">
-                +
-              </div>
+            <h3>No medical records available</h3>
 
-              <h3>
-                No medical records available
-              </h3>
+            <p>
+              There are currently no medical records available for this account.
+            </p>
+          </div>
+        )}
 
-              <p>
-                There are currently no medical
-                records available for this account.
-              </p>
+        {!loading && records.length > 0 && (
+          <div className="medical-record-list">
+            {records.map((record) => (
+              <div className="medical-record-item" key={record.id}>
+                <div>
+                  <strong>{record.diagnosis}</strong>
 
-            </div>
-          )}
-
-        {!loading &&
-          records.length > 0 && (
-            <div className="medical-record-list">
-
-              {records.map((record) => (
-                <div
-                  className="medical-record-item"
-                  key={record.id}
-                >
-
-                  <div>
-                    <strong>
-                      {record.diagnosis}
-                    </strong>
-
-                    <p>
-                      {record.description ||
-                        "No description available."}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>
-                      Record Date
-                    </small>
-
-                    <p>
-                      {record.recordDate}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>
-                      Doctor
-                    </small>
-
-                    <p>
-                      {record.doctorName ||
-                        "Not available"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <small>
-                      Hospital
-                    </small>
-
-                    <p>
-                      {record.hospitalName ||
-                        "Not available"}
-                    </p>
-                  </div>
-
-                  {/* Delete */}
-
-                  <div>
-                    <button
-                      type="button"
-                      className="delete-record-button"
-                      onClick={() =>
-                        handleDelete(record.id)
-                      }
-                      disabled={
-                        deletingId === record.id
-                      }
-                    >
-                      {deletingId === record.id
-                        ? "Deleting..."
-                        : "Delete"}
-                    </button>
-                  </div>
-
+                  <p>{record.description || "No description available."}</p>
                 </div>
-              ))}
 
-            </div>
-          )}
+                <div>
+                  <small>Record Date</small>
 
+                  <p>{record.recordDate}</p>
+                </div>
+
+                <div>
+                  <small>Doctor</small>
+
+                  <p>{record.doctorName || "Not available"}</p>
+                </div>
+
+                <div>
+                  <small>Hospital</small>
+
+                  <p>{record.hospitalName || "Not available"}</p>
+                </div>
+
+                {/* Delete */}
+
+                <div>
+                  <button
+                    type="button"
+                    className="delete-record-button"
+                    onClick={() => handleDelete(record.id)}
+                    disabled={deletingId === record.id}
+                  >
+                    {deletingId === record.id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
     </div>
   );
 }
