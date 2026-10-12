@@ -1,3 +1,4 @@
+
 package medical_record_backend.controller;
 
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,10 @@ import medical_record_backend.service.PatientService;
 
 @RestController
 @RequestMapping("/api/patients")
-@
 @CrossOrigin(origins = {
     "http://localhost:5173",
     "https://medical-record-continuity.vercel.app"
 })
-sOrigin(origins = "http://localhost:5173")
 public class PatientController {
 
     private final PatientService patientService;
@@ -30,16 +29,12 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-
-    // ==================== REGISTER ====================
-
+    // REGISTER
     @PostMapping("/register")
     public ResponseEntity<?> registerPatient(
-            @RequestBody Patient patient
-    ) {
+            @RequestBody Patient patient) {
 
         try {
-
             Patient registeredPatient =
                     patientService.registerPatient(patient);
 
@@ -51,28 +46,22 @@ public class PatientController {
                     .body(registeredPatient);
 
         } catch (RuntimeException e) {
-
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
         }
     }
 
-
-    // ==================== LOGIN ====================
-
+    // LOGIN
     @PostMapping("/login")
     public ResponseEntity<?> loginPatient(
-            @RequestBody LoginRequest request
-    ) {
+            @RequestBody LoginRequest request) {
 
         try {
-
-            Patient patient =
-                    patientService.loginPatient(
-                            request.getEmail(),
-                            request.getPassword()
-                    );
+            Patient patient = patientService.loginPatient(
+                    request.getEmail(),
+                    request.getPassword()
+            );
 
             // Never send password to frontend
             patient.setPassword(null);
@@ -80,29 +69,23 @@ public class PatientController {
             return ResponseEntity.ok(patient);
 
         } catch (RuntimeException e) {
-
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(e.getMessage());
         }
     }
 
-
-    // ==================== UPDATE PROFILE ====================
-
+    // UPDATE PROFILE
     @PutMapping("/{patientId}")
     public ResponseEntity<?> updatePatient(
             @PathVariable Long patientId,
-            @RequestBody Patient updatedPatient
-    ) {
+            @RequestBody Patient updatedPatient) {
 
         try {
-
-            Patient updated =
-                    patientService.updatePatient(
-                            patientId,
-                            updatedPatient
-                    );
+            Patient updated = patientService.updatePatient(
+                    patientId,
+                    updatedPatient
+            );
 
             // Never send password to frontend
             updated.setPassword(null);
@@ -110,23 +93,18 @@ public class PatientController {
             return ResponseEntity.ok(updated);
 
         } catch (RuntimeException e) {
-
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
         }
     }
 
-
-    // ==================== DELETE ACCOUNT ====================
-
+    // DELETE ACCOUNT
     @DeleteMapping("/{patientId}")
     public ResponseEntity<?> deletePatient(
-            @PathVariable Long patientId
-    ) {
+            @PathVariable Long patientId) {
 
         try {
-
             patientService.deletePatient(patientId);
 
             return ResponseEntity.ok(
@@ -134,36 +112,29 @@ public class PatientController {
             );
 
         } catch (RuntimeException e) {
-
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
         }
     }
 
-
-    // ==================== LOGIN REQUEST ====================
-
+    // LOGIN REQUEST DTO
     public static class LoginRequest {
 
         private String email;
         private String password;
 
-
         public String getEmail() {
             return email;
         }
-
 
         public void setEmail(String email) {
             this.email = email;
         }
 
-
         public String getPassword() {
             return password;
         }
-
 
         public void setPassword(String password) {
             this.password = password;
