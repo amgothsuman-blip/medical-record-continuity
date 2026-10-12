@@ -17,7 +17,10 @@ import medical_record_backend.service.PrescriptionService;
 
 @RestController
 @RequestMapping("/api/prescriptions")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://medical-record-continuity.vercel.app"
+})
 public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;
