@@ -15,14 +15,16 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
-                                "http://localhost:5173",
-                                "https://medical-record-continuity.vercel.app",
-                                "https://medical-record-continuity-m2xm8aw6i-amgothsuman-blip.vercel.app")
-                        .allowedMethods(
-                                "GET", "POST", "PUT", "DELETE",
-                                "PATCH", "OPTIONS")
-                        .allowedHeaders("*");
+                    .allowedOrigins(
+                        "http://localhost:5173",
+                        "https://medical-record-continuity.vercel.app",
+                        "https://medical-record-continuity-7gf4namqz-amgothsuman-blip.vercel.app"
+                    )
+                    .allowedMethods(
+                        "GET", "POST", "PUT", "DELETE",
+                        "PATCH", "OPTIONS"
+                    )
+                    .allowedHeaders("*");
             }
         };
     }
