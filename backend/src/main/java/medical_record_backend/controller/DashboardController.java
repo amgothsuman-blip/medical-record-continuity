@@ -14,7 +14,7 @@ import medical_record_backend.service.DashboardService.DashboardData;
 @RequestMapping("/api/dashboard")
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "https://medical-record-continuity.vercel.app"
+    "https://medical-record-continuity-7gf4namqz-amgothsuman-blip.vercel.app/"
 })
 public class DashboardController {
 
